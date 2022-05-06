@@ -20,6 +20,7 @@ public class StockValuesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(decimal))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetByTickerSymbol(string tickerSymbol)
     {
         if (string.IsNullOrWhiteSpace(tickerSymbol))
@@ -47,6 +48,7 @@ public class StockValuesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StockValue>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetByTickerSymbols([FromQuery] List<string> tickerSymbols)
     {
         if (!tickerSymbols.Any() || tickerSymbols.All(String.IsNullOrWhiteSpace))
@@ -73,6 +75,7 @@ public class StockValuesController : ControllerBase
     [Route("")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StockValue>))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetAll()
     {
         var stockValues = await _stockValueService.GetAllStockValuesAsync();

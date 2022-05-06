@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using Dapper;
 using LondonStockExchange.Sql.Configuration;
+using LondonStockExchange.Sql.Repositories.Models;
 using Microsoft.Extensions.Options;
 
 
@@ -29,12 +30,18 @@ public class BaseRepository
         return builder;
     }
 
-    protected async Task<List<T>> GetByCommandAsync<T>(string sqlCommand)
+    protected async Task<List<T>> GetByCommandAsync<T>(string sqlCommand, List<SqlCommandParameter>? sqlCommandParameters = null)
     {
         if (string.IsNullOrWhiteSpace(sqlCommand))
         {
             throw new ArgumentException("Sql Command must not be null, empty or whitespace", nameof(sqlCommand));
         }
+
+        if (sqlCommandParameters != null)
+        {
+            CheckSqlCommandParameters(sqlCommandParameters);
+        }
+        
 
         var builder = BuildSqlConnectionString();
 
@@ -45,6 +52,11 @@ public class BaseRepository
 
             using (SqlCommand command = new SqlCommand(sqlCommand, connection))
             {
+                if (sqlCommandParameters != null)
+                {
+                    AddSqlCommandParametersToSqlCommand(command, sqlCommandParameters);
+                }
+
                 await using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     var parser = reader.GetRowParser<T>(typeof(T));
@@ -60,11 +72,16 @@ public class BaseRepository
         return result;
     }
 
-    protected async Task ExecuteByCommandAsync(string sqlCommand)
+    protected async Task ExecuteByCommandAsync(string sqlCommand, List<SqlCommandParameter>? sqlCommandParameters = null)
     {
         if (string.IsNullOrWhiteSpace(sqlCommand))
         {
             throw new ArgumentException("Sql Command must not be null, empty or whitespace", nameof(sqlCommand));
+        }
+        
+        if (sqlCommandParameters != null)
+        {
+            CheckSqlCommandParameters(sqlCommandParameters);
         }
 
         var builder = BuildSqlConnectionString();
@@ -75,8 +92,36 @@ public class BaseRepository
 
             using (SqlCommand command = new SqlCommand(sqlCommand, connection))
             {
-                await connection.ExecuteAsync(sqlCommand);
+                if (sqlCommandParameters != null)
+                {
+                    AddSqlCommandParametersToSqlCommand(command, sqlCommandParameters);
+                }
+
+                await command.ExecuteScalarAsync();
             }
+        }
+    }
+
+    private static void AddSqlCommandParametersToSqlCommand(SqlCommand sqlCommand, List<SqlCommandParameter> sqlCommandParameters)
+    {
+        foreach (var sqlCommandParameter in sqlCommandParameters)
+        {
+            sqlCommand.Parameters.Add(sqlCommandParameter.Name, sqlCommandParameter.SqlType);
+            sqlCommand.Parameters[sqlCommandParameter.Name].Value = sqlCommandParameter.Value;
+        }    
+    }
+
+    private static void CheckSqlCommandParameters(List<SqlCommandParameter> sqlCommandParameters)
+    {
+        
+        if (sqlCommandParameters.Any(sqp => String.IsNullOrWhiteSpace(sqp.Name)))
+        {
+            throw new ArgumentException("Sql Command Parameters must have a name", nameof(sqlCommandParameters));
+        }
+        
+        if (sqlCommandParameters.Any(sqp => sqp.Value == null))
+        {
+            throw new ArgumentException("Sql Command Parameters Value cannot be null", nameof(sqlCommandParameters));
         }
     }
 }

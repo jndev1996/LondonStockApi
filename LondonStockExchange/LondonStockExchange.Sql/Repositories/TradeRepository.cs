@@ -1,4 +1,6 @@
-﻿using LondonStockExchange.Sql.Configuration;
+﻿using System.Data;
+using LondonStockExchange.Sql.Configuration;
+using LondonStockExchange.Sql.Repositories.Models;
 using Microsoft.Extensions.Options;
 
 namespace LondonStockExchange.Sql.Repositories;
@@ -9,6 +11,39 @@ public class TradeRepository : BaseRepository, ITradeRepository
 
     public async Task CreateTrade(int brokerId, string tickerSymbol, decimal numberOfShares, decimal price)
     {
+	    var tickerSymbolName = "@TickerSymbolName";
+	    var brokerIdName = "@BrokerIdName";
+	    var numberOfSharesName = "@NumberOfSharesName";
+	    var priceName = "@PriceName";
+	    
+	    var sqlCommandParameters = new List<SqlCommandParameter>
+	    {
+		    new()
+		    {
+			   Name = tickerSymbolName,
+			   Value = tickerSymbol,
+			   SqlType = SqlDbType.NVarChar
+		    },
+		    new()
+		    {
+			    Name = brokerIdName,
+			    Value = brokerId,
+			    SqlType = SqlDbType.Int
+		    },
+		    new()
+		    {
+			    Name = numberOfSharesName,
+			    Value = numberOfShares,
+			    SqlType = SqlDbType.Decimal
+		    },
+		    new()
+		    {
+			    Name = priceName,
+			    Value = price,
+			    SqlType = SqlDbType.Money
+		    }
+	    };
+	    
         var command = $@"	BEGIN TRAN
 							DECLARE @TradeGuid uniqueidentifier;
 							DECLARE @TradesTable table (TradeGuid uniqueidentifier)
@@ -18,22 +53,22 @@ public class TradeRepository : BaseRepository, ITradeRepository
 				            (
 					            SELECT * FROM  [dbo].[Tickers] Tickers
 					            WITH (UPDLOCK, SERIALIZABLE)
-					            WHERE Tickers.TickerSymbol = '{tickerSymbol}'
+					            WHERE Tickers.TickerSymbol = {tickerSymbolName}
 				            )
 				            BEGIN
-				            INSERT INTO [dbo].[Tickers] ([TickerSymbol]) VALUES ('{tickerSymbol}')	
+				            INSERT INTO [dbo].[Tickers] ([TickerSymbol]) VALUES ({tickerSymbolName})	
 				            END;
 
-							SET @TickerId = (SELECT TickerId FROM [dbo].[Tickers] WHERE TickerSymbol = '{tickerSymbol}')
+							SET @TickerId = (SELECT TickerId FROM [dbo].[Tickers] WHERE TickerSymbol = {tickerSymbolName})
 
                             IF NOT EXISTS 
                             (
 	                            SELECT * FROM  [dbo].[Brokers] Brokers
 	                            WITH (UPDLOCK, SERIALIZABLE)
-	                            WHERE Brokers.BrokerId = {brokerId}
+	                            WHERE Brokers.BrokerId = {brokerIdName}
                             )
                             BEGIN
-                            INSERT INTO [dbo].[Brokers] ([BrokerId]) VALUES ({brokerId})	
+                            INSERT INTO [dbo].[Brokers] ([BrokerId]) VALUES ({brokerIdName})	
                             END;
 
                             INSERT INTO [dbo].[Trades]
@@ -43,10 +78,10 @@ public class TradeRepository : BaseRepository, ITradeRepository
                                        ,[NumberOfStocks])
 								OUTPUT inserted.TradeGuid into @TradesTable
                                  VALUES
-                                       ({brokerId}
+                                       ({brokerIdName}
                                        ,@TickerId
-                                       ,{price}
-                                       ,{numberOfShares})
+                                       ,{priceName}
+                                       ,{numberOfSharesName})
 							SELECT @TradeGuid = TradeGuid from @TradesTable
 
 							UPDATE [dbo].[StockValues] WITH (UPDLOCK, SERIALIZABLE) SET TradeGuid = @TradeGuid
@@ -60,6 +95,6 @@ public class TradeRepository : BaseRepository, ITradeRepository
 
                             COMMIT TRAN;";
         
-        await ExecuteByCommandAsync(command);
+        await ExecuteByCommandAsync(command, sqlCommandParameters);
     }
 }

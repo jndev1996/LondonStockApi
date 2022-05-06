@@ -18,6 +18,7 @@ public class TradeController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateTrade([FromBody]CreateTradeCommand createTradeCommand)
     {
         if (string.IsNullOrWhiteSpace(createTradeCommand.TickerSymbol)

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "2m+Zs/689HpYqdjL/YCbWAjy8X1S5EbZArh5WSiFS7w=",
+  "Source": "LondonStockExchange.Api",
+  "BasePath": "_content/LondonStockExchange.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

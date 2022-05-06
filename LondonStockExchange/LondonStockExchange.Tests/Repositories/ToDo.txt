@@ -1,0 +1,3 @@
+Put Integration tests here targeting an in memory SQL database, checking the outcome of each repository call.
+
+https://adatis.co.uk/sql-server-database-integration-testing-using-nunit/

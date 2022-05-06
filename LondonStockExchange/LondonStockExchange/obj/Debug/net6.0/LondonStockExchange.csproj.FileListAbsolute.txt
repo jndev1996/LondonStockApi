@@ -1,0 +1,15 @@
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\bin\Debug\net6.0\LondonStockExchange.deps.json
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\bin\Debug\net6.0\LondonStockExchange.dll
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\bin\Debug\net6.0\LondonStockExchange.pdb
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\LondonStockExchange.csproj.AssemblyReference.cache
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\LondonStockExchange.GeneratedMSBuildEditorConfig.editorconfig
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\LondonStockExchange.AssemblyInfoInputs.cache
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\LondonStockExchange.AssemblyInfo.cs
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\LondonStockExchange.csproj.CoreCompileInputs.cache
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\staticwebassets.build.json
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\staticwebassets.development.json
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\scopedcss\bundle\LondonStockExchange.styles.css
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\LondonStockExchange.dll
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\refint\LondonStockExchange.dll
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\LondonStockExchange.pdb
+C:\LondonStockApi\LondonStockExchange\LondonStockExchange\obj\Debug\net6.0\ref\LondonStockExchange.dll

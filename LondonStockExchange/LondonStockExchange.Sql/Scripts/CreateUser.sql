@@ -1,0 +1,5 @@
+CREATE LOGIN Dev   
+    WITH PASSWORD = 'password';
+GO  
+
+CREATE USER DevUser FOR LOGIN Dev;
